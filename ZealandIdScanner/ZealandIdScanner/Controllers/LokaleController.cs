@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using static ZealandIdScanner.Models.Sensors;
 using ZealandIdScanner.Models;
 using ZealandIdScanner;
-using ZealandIdScanner.EBbContext;
 using Microsoft.EntityFrameworkCore;
+using ZealandIdScanner.EBbContext;
 
 namespace ZealandIdScanner.Controllers
 {
@@ -23,21 +23,21 @@ namespace ZealandIdScanner.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Lokaler>>> GetLokaler()
         {
-            if (_dbContext.lokaler == null)
+            if (_dbContext.Lokaler == null)
             {
                 return NotFound();
             }
-            return await _dbContext.lokaler.ToListAsync();
+            return await _dbContext.Lokaler.ToListAsync();
         }
 
         [HttpGet("Id/{id}")]
         public async Task<ActionResult<Lokaler>> GetLokale(int id)
         {
-            if (_dbContext.lokaler == null)
+            if (_dbContext.Lokaler == null)
             {
                 return NotFound("DbContext can'be null");
             }
-            var lokale = await _dbContext.lokaler.FindAsync(id);
+            var lokale = await _dbContext.Lokaler.FindAsync(id);
 
             if (lokale == null)
             {
@@ -65,7 +65,7 @@ namespace ZealandIdScanner.Controllers
 
             try
             {
-                _dbContext.lokaler.Add(lokale);
+                _dbContext.Lokaler.Add(lokale);
                 await _dbContext.SaveChangesAsync();
 
                 return CreatedAtAction("GetLokale", new { id = lokale.SensorId }, lokale);

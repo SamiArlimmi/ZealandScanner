@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using static ZealandIdScanner.Models.Sensors;
+﻿using Microsoft.AspNetCore.Mvc;
 using ZealandIdScanner.Models;
-using ZealandIdScanner.EBbContext;
 using Microsoft.EntityFrameworkCore;
+using ZealandIdScanner.EBbContext;
 
 namespace ZealandIdScanner.Controllers
 {
@@ -41,22 +39,22 @@ namespace ZealandIdScanner.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sensors>>> GetSensorer()
         {
-            if (_context.Sensorer == null)
+            if (_context.Sensors == null)
             {
                 return NotFound();
             }
-            return await _context.Sensorer.ToListAsync();
+            return await _context.Sensors.ToListAsync();
         }
 
         // GET: api/Sensors/5
         [HttpGet("Id/{id}")]
         public async Task<ActionResult<Sensors>> GetSensor(int id)
         {
-            if (_context.Sensorer == null)
+            if (_context.Sensors == null)
             {
                 return NotFound("DbContext can'be null");
             }
-            var sensor = await _context.Sensorer.FindAsync(id);
+            var sensor = await _context.Sensors.FindAsync(id);
 
             if (sensor == null)
             {
@@ -109,17 +107,17 @@ namespace ZealandIdScanner.Controllers
             {
                 return StatusCode(422, ex.Message);
             }
-            if (_context.Sensorer == null)
+            if (_context.Sensors == null)
             {
                 return Problem("Entity set 'ZealandIdDbContext.Sensorer'  is null.");
             }
-            var relatedEntity = await _context.lokaler.FindAsync(sensor);
+            var relatedEntity = await _context.Lokaler.FindAsync(sensor);
 
             if (relatedEntity == null)
             {
                 return StatusCode(422, "Invalid LokaleId");
             }
-            _context.Sensorer.Add(sensor);
+            _context.Sensors.Add(sensor);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetSensor", new { id = sensor.SensorId }, sensor);
@@ -129,17 +127,17 @@ namespace ZealandIdScanner.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSensor(int id)
         {
-            if (_context.Sensorer == null)
+            if (_context.Sensors == null)
             {
                 return NotFound();
             }
-            var sensor = await _context.Sensorer.FindAsync(id);
+            var sensor = await _context.Sensors.FindAsync(id);
             if (sensor == null)
             {
                 return NotFound();
             }
 
-            _context.Sensorer.Remove(sensor);
+            _context.Sensors.Remove(sensor);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -147,7 +145,7 @@ namespace ZealandIdScanner.Controllers
 
         private bool SensorExists(int id)
         {
-            return (_context.Sensorer?.Any(e => e.SensorId == id)).GetValueOrDefault();
+            return (_context.Sensors?.Any(e => e.SensorId == id)).GetValueOrDefault();
         }
     }
 }
